@@ -8,9 +8,21 @@
 <body>
     <textarea id="textarea"></textarea>
 </body>
-<script type="text/javascript" src="http://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="../js/jquery.richtext.js"></script>
 <script type="text/javascript">
+$( document ).ready(function() {
+    // Add list of words.
+    var WORDS = [];
+    $.get(
+        "http://api.datamuse.com/words", {ml : 'coding'},
+        function(data) {
+            for(var i=0; i<data.length; i++){
+                WORDS.push(data[i].word);
+            }
+        }
+    );
+
     $('#textarea').richText({
         // text formatting
         bold: true,
@@ -57,5 +69,6 @@
         // video
         videoEmbed: false
     });
+});
 </script>
 </html>
