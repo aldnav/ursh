@@ -1,0 +1,45 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" type="text/css" href="index.css" />
+        <title>Hackathon</title>
+    </head>
+    <body>
+        <div class="screens">
+            <div class="p1-screen screen">
+                <label>Your Stack</label>
+                <div class="content">
+                    <div>Hello</div>
+                    <div class="b">Hi</div>
+                    <div class="i">Hi</div>
+                    <div class="u">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+                </div>
+            </div>
+
+            <div class="p2-screen screen">
+                <label>Your Opponent's Stack</label>
+                <div class="content">
+                    <div>Hello</div>
+                    <div class="b">Hi</div>
+                    <div class="i">Hi</div>
+                    <div class="u">Hi</div>
+                </div>
+            </div>
+        </div>
+        <div class="input"></div>
+
+
+        <script>
+            window.addEventListener('keypress', (e) => {
+                const input = document.querySelector('.input');
+                if (input.innerHTML.length < 128) {
+                    input.innerHTML = input.innerHTML + e.key;
+                } else {
+                    input.innerHTML = input.innerHTML.substring(1) + e.key;
+                }
+                console.log(input.innerHTML.length, input.innerHTML.substring(1));
+            })
+        </script>
+    </body>
+</html>

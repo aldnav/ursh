@@ -1,0 +1,166 @@
+body {
+    background-color: #212121;
+    min-height: 100vh;
+    font-family: monospace;
+    margin: 0;
+    padding: 0;
+}
+
+
+.screens {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    height: calc(100vh - 48px);
+}
+
+.screen {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+
+.p1-screen {
+    width: calc(100% - 300px);
+    border-right: 2px solid #00B8D4;
+}
+
+.p2-screen {
+    width: 300px;
+    opacity: 0.7;
+}
+
+.content {
+    display: flex;
+    flex-direction: column-reverse;
+    height: 100%;
+}
+
+
+.content > div {
+    margin: 4px 8px;
+    padding: 16px;
+    text-overflow: ellipsis;
+    text-align: center;
+    font-size: 20px;
+    color: #00E5FF;
+    white-space: nowrap;
+    border-radius: 2px;
+    border: 1px solid #006064;
+    overflow: hidden;
+}
+
+.p2-screen .content > div {
+    color: #76FF03;
+    border-color: #33691E;
+}
+
+.content > div:first-child {
+    margin-bottom: 12px;
+}
+
+.p1-screen .content > div:first-child {
+    background-color: #006064;
+}
+
+.content > .b {
+    font-weight: bold;
+}
+
+.content > .i {
+    font-style: italic;
+}
+
+.content > .u {
+    text-decoration: underline;
+}
+
+
+.screen label {
+    background-color: #006064;
+    position: absolute;
+    padding: 8px;
+    top: 0;
+    right: 0;
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+}
+
+
+.p2-screen label {
+    background-color: #33691E;
+}
+
+
+
+.input {
+    background-color: #022e2f;
+    position: fixed;
+    padding-left: 16px;
+    display: flex;
+    align-items: center;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 48px;
+    line-height: 48px;
+    font-size: 16px;
+    color: #18FFFF;
+}
+
+.input.error {
+    background-color: #63200c;
+    color: white;
+}
+
+.input::after {
+    content: "";
+    background-color: #18FFFF;
+    display: inline-block;
+    margin-top: 9px;
+    margin-left: 8px;
+    width: 8px;
+    height: 2px;
+    animation: blink 500ms infinite;
+}
+
+.input.error::after {
+    background-color: white;
+    animation: blink-2 500ms infinite;
+}
+
+
+@keyframes blink {
+    0% {
+        background-color: #18FFFF;
+    }
+
+    50% {
+        background-color: transparent;
+    }
+
+    100% {
+        background-color: #18FFFF;
+    }
+}
+
+
+
+@keyframes blink-2 {
+    0% {
+        background-color: white;
+    }
+
+    50% {
+        background-color: transparent;
+    }
+
+    100% {
+        background-color: white;
+    }
+}
