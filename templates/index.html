@@ -1,92 +1,131 @@
-<form action="" id="player1form">
-    <input type="text" id="player1message" name="player1message" data-player='player1' class="player">
-</form>
-<form action="" id="player2form">
-    <input type="text" id="player2message" name="player2message" data-player='player2' class="opponent">
-</form>
+<!DOCTYPE>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" type="text/css" href="/static/index.css" />
+        <title>Hackathon</title>
+    </head>
+    <body>
+        <div class="screens">
+            <div class="p1-screen screen">
+                <label>Your Stack</label>
+                <div class="content">
+                    <div>Hello</div>
+                    <div class="b">Hi</div>
+                    <div class="i">Hi</div>
+                    <div class="u">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+                </div>
+            </div>
 
-<script type="text/javascript" src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js"></script>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
-<script type="text/javascript" charset="utf-8">
-    var socket = io.connect('http://' + document.domain + ':' + location.port);
-    Cookies.remove('playerid');
-    Cookies.remove('opponentid');
-    let playerid = Cookies.get('playerid') || null;
-    let opponentid = Cookies.get('opponentid') || null;
+            <div class="p2-screen screen">
+                <label>Your Opponent's Stack</label>
+                <div class="content">
+                    <div>Hello</div>
+                    <div class="b">Hi</div>
+                    <div class="i">Hi</div>
+                    <div class="u">Hi</div>
+                </div>
+            </div>
+        </div>
+        <form action="">
+            <div class="input"></div>
+        </form>
 
-    socket.on('connect', function() {
-        if (!playerid) {
-            socket.emit('game:register:request', {});
-            console.log('Register request sent');
-        } else {
-            console.log('Already registered.', playerid);
-            console.log('Joining game.', playerid);
-            socket.emit('game:join', {playerid: playerid});
-            $('.player').data('identity', playerid);
-            $('.opponent').hide();
-        }
-    });
+    <template>
+        <form action="" id="player1form">
+            <input type="text" id="player1message" name="player1message" data-player='player1' class="player">
+        </form>
+        <form action="" id="player2form">
+            <input type="text" id="player2message" name="player2message" data-player='player2' class="opponent">
+        </form>
+    </template>
 
-    $('form').on('submit', (e) => {
-        if (!playerid) {
-            return;
-        }
-        e.preventDefault();
-        let text = $(e.target).find('input').val();
-        let player = $(e.target).find('input').data('player');
-        socket.emit('message:shoot', {message: text, player: playerid, opponent: Cookies.get('opponentid')})
-        $(e.target).find('input').val('');
-    });
 
-    socket.on('game:register:success', (res) => {
-        playerid = res.player_id;
-        Cookies.set('playerid', playerid);
-        console.log('Registered success!', playerid);
-        $('.player').data('identity', playerid);
-        $('.opponent').hide();
-    });
+        <script type="text/javascript" src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+        <script type="text/javascript" charset="utf-8">
+            var socket = io.connect('http://' + document.domain + ':' + location.port);
+            Cookies.remove('playerid');
+            Cookies.remove('opponentid');
+            let playerid = Cookies.get('playerid') || null;
+            let opponentid = Cookies.get('opponentid') || null;
 
-    socket.on('game:join:success', (res) => {
-        console.log('Joining game:', playerid);
-    });
+            socket.on('connect', function() {
+                if (!playerid) {
+                    socket.emit('game:register:request', {});
+                    console.log('Register request sent');
+                } else {
+                    console.log('Already registered.', playerid);
+                    console.log('Joining game.', playerid);
+                    socket.emit('game:join', {playerid: playerid});
+                    $('.player').data('identity', playerid);
+                    $('.opponent').hide();
+                }
+            });
 
-    // add logic to know which player is this
-    socket.on('message:pass', (res) => {
-        console.log(res, playerid);
-        if (res.target === playerid) {
-            console.log('player 1 received: ', res);
-        }
-    });
+            $('form').on('submit', (e) => {
+                if (!playerid) {
+                    return;
+                }
+                e.preventDefault();
+                let text = $(e.target).find('input').val();
+                let player = $(e.target).find('input').data('player');
+                socket.emit('message:shoot', {message: text, player: playerid, opponent: Cookies.get('opponentid')})
+                $(e.target).find('input').val('');
+            });
 
-    let pooltimeout;
-    function requestOpponent() {
-        console.log('requesting opponent');
-        if (opponentid) {
-            console.log('opponent: ', opponentid);
-            return;
-        }
-        pooltimeout = setTimeout(() => {
-            clearTimeout(pooltimeout);
-            socket.emit('game:request_opponent', {playerid: playerid});
-            if (!opponentid) {
-                requestOpponent();
+            socket.on('game:register:success', (res) => {
+                playerid = res.player_id;
+                Cookies.set('playerid', playerid);
+                console.log('Registered success!', playerid);
+                $('.player').data('identity', playerid);
+                $('.opponent').hide();
+            });
+
+            socket.on('game:join:success', (res) => {
+                console.log('Joining game:', playerid);
+            });
+
+            // add logic to know which player is this
+            socket.on('message:pass', (res) => {
+                console.log(res, playerid);
+                if (res.target === playerid) {
+                    console.log('player 1 received: ', res);
+                }
+            });
+
+            let pooltimeout;
+            function requestOpponent() {
+                console.log('requesting opponent');
+                opponentid = Cookies.get('opponentid');
+                if (opponentid) {
+                    console.log('opponent: ', opponentid);
+                    return;
+                }
+                pooltimeout = setTimeout(() => {
+                    clearTimeout(pooltimeout);
+                    socket.emit('game:request_opponent', {playerid: playerid});
+                    if (!opponentid) {
+                        requestOpponent();
+                    }
+                }, 500);
             }
-        }, 500);
-    }
-    setTimeout(requestOpponent, 500);
+            setTimeout(requestOpponent, 500);
 
-    socket.on('game:request_opponent:ready', (res) => {
-        if (res.opponent_id) {
-            console.log('match found vs', res.opponent_id);
-            opponentid = res.opponentid;
-            Cookies.set('opponentid', res.opponent_id);
-            clearTimeout(pooltimeout);
-            $('.opponent').data('identity', opponentid);
-        }
-    });
+            socket.on('game:request_opponent:ready', (res) => {
+                if (res.opponent_id) {
+                    console.log('match found vs', res.opponent_id);
+                    opponentid = res.opponentid;
+                    Cookies.set('opponentid', res.opponent_id);
+                    clearTimeout(pooltimeout);
+                    $('.opponent').data('identity', opponentid);
+                }
+            });
 
-    // socket.on('game:request_opponent:fail', () => requestOpponent);
+            // socket.on('game:request_opponent:fail', () => requestOpponent);
 
 
-</script>
+        </script>
+    </body>
+</html>
