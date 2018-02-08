@@ -1,4 +1,4 @@
-
+import json
 from flask import Flask, render_template
 from flask_socketio import SocketIO, send, emit
 
@@ -19,8 +19,14 @@ def handle_my_custom_event(json):
 
 
 @socketio.on('message:shoot')
-def handle_message(request):
-    print request
+def handle_relay(request):
+    player = request.get('player')
+    opponent = 'player2'
+    if player == 'player2':
+        opponent = 'player1'
+    emit(
+        'message:pass:%s' % opponent,
+        json.dumps({'message': request.get('message')}))
 
 
 @app.route('/')

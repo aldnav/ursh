@@ -21,4 +21,13 @@
         $(e.target).find('input').val('');
     });
 
+    // add logic to know which player is this
+    socket.on('message:pass:player1', (req) => {
+        console.log('player 1 received: ', req);
+    });
+
+    socket.on('message:pass:player2', (req) => {
+        console.log('player 2 received: ', req);
+    });
+
 </script>
