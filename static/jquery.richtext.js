@@ -1,13 +1,13 @@
 (function ( $ ) {
     // Force variable.
     var INPUT = '';
- 
+
     $.fn.richText = function( options ) {
 
         // set default options
         // and merge them with the parameter options
         var settings = $.extend({
-            
+
             // text formatting
             bold: true,
             italic: true,
@@ -27,16 +27,16 @@
 
             // fonts
             fonts: true,
-            fontList: ["Arial", 
-                    "Arial Black", 
-                    "Comic Sans MS", 
-                    "Courier New", 
-                    "Geneva", 
-                    "Georgia", 
-                    "Helvetica", 
-                    "Impact", 
-                    "Lucida Console", 
-                    "Tahoma", 
+            fontList: ["Arial",
+                    "Arial Black",
+                    "Comic Sans MS",
+                    "Courier New",
+                    "Geneva",
+                    "Georgia",
+                    "Helvetica",
+                    "Impact",
+                    "Lucida Console",
+                    "Tahoma",
                     "Times New Roman",
                     "Verdana"
                     ],
@@ -166,7 +166,7 @@
             $btnRemoveStyles = $('<a />', {class: "richText-btn fa fa-recycle", "data-command": "removeFormat", "title": settings.translations.removeStyles}), // clean up styles
             $btnCode = $('<a />', {class: "richText-btn fa fa-code", "data-command": "toggleCode", "title": settings.translations.code}); // code
 
-        
+
         /* prepare toolbar dropdowns */
         var $dropdownOuter = $('<div />', {class: "richText-dropdown-outer"});
         var $dropdownClose = $('<span />', {class: "richText-dropdown-close", html: '<span class="fa fa-times" title="' + settings.translations.close + '"></span>'});
@@ -268,7 +268,7 @@
         var $imageDropdown = $dropdownBox.clone();
         var $imageForm = $form.clone().attr("id", "richText-Image").attr("data-editor", editorID);
 
-        if(settings.imageHTML 
+        if(settings.imageHTML
             && ($(settings.imageHTML).find('#imageURL').length > 0 || $(settings.imageHTML).attr("id") === "imageURL")) {
             // custom image form
             $imageForm.html(settings.imageHTML);
@@ -299,7 +299,7 @@
         var $fileDropdown = $dropdownBox.clone();
         var $fileForm = $form.clone().attr("id", "richText-File").attr("data-editor", editorID);
 
-        if(settings.fileHTML 
+        if(settings.fileHTML
             && ($(settings.fileHTML).find('#fileURL').length > 0 || $(settings.fileHTML).attr("id") === "fileURL")) {
             // custom file form
             $fileForm.html(settings.fileHTML);
@@ -558,12 +558,12 @@
                 tabifyEditableTable(window, e);
                 return false;
             }else if((e.keyCode === 13 || e.keyCode === "13")){
-                INPUT = $('.richText').find('.richText-editor').html();
-                console.log(INPUT);
-                e.preventDefault();
-                $('.richText').find('textarea').val('');
-                $('.richText').find('.richText-editor').html('');
-                return false;
+                // INPUT = $('.richText').find('.richText-editor').html();
+                // console.log(INPUT);
+                // e.preventDefault();
+                // $('.richText').find('textarea').val('');
+                // $('.richText').find('.richText-editor').html('');
+                // return false;
             }
             fixFirstLine();
             updateTextarea();
@@ -747,7 +747,7 @@
                     // resizing disabled, allow dragging image
                     $resizeImage = null;
                 }
-                
+
             }
         });
         $(document)
@@ -958,7 +958,7 @@
                 if(!columns || columns <= 0) {
                     columns = 2;
                 }
-                
+
                 // generate table
                 var html = '';
                 if(settings.useSingleQuotes === true) {
@@ -1139,7 +1139,7 @@
                     var preSelectionRange = range.cloneRange();
                     preSelectionRange.selectNodeContents(containerEl);
                     preSelectionRange.setEnd(range.startContainer, range.startOffset);
-                    
+
                     start = preSelectionRange.toString().length;
                     end = (start + range.toString().length);
 
@@ -1327,29 +1327,29 @@
 
                     if (!e.shiftKey) {
                         direction = "next";
-                        textNode = (sel.focusNode.nodeName === "TD") 
-                            ? (sel.focusNode.nextSibling != null) 
-                                ? sel.focusNode.nextSibling 
-                                : (sel.focusNode.parentNode.nextSibling != null) 
-                                    ? sel.focusNode.parentNode.nextSibling.childNodes[0] 
-                                    : null 
-                                : (sel.focusNode.parentNode.nextSibling != null) 
-                                ? sel.focusNode.parentNode.nextSibling 
-                                : (sel.focusNode.parentNode.parentNode.nextSibling != null) 
-                            ? sel.focusNode.parentNode.parentNode.nextSibling.childNodes[0] 
+                        textNode = (sel.focusNode.nodeName === "TD")
+                            ? (sel.focusNode.nextSibling != null)
+                                ? sel.focusNode.nextSibling
+                                : (sel.focusNode.parentNode.nextSibling != null)
+                                    ? sel.focusNode.parentNode.nextSibling.childNodes[0]
+                                    : null
+                                : (sel.focusNode.parentNode.nextSibling != null)
+                                ? sel.focusNode.parentNode.nextSibling
+                                : (sel.focusNode.parentNode.parentNode.nextSibling != null)
+                            ? sel.focusNode.parentNode.parentNode.nextSibling.childNodes[0]
                             : null;
                     } else {
                         direction = "previous";
-                        textNode = (sel.focusNode.nodeName === "TD") 
-                            ? (sel.focusNode.previousSibling != null) 
-                                ? sel.focusNode.previousSibling 
-                                : (sel.focusNode.parentNode.previousSibling != null) 
-                                    ? sel.focusNode.parentNode.previousSibling.childNodes[sel.focusNode.parentNode.previousSibling.childNodes.length - 1] 
-                                    : null 
-                                : (sel.focusNode.parentNode.previousSibling != null) 
-                            ? sel.focusNode.parentNode.previousSibling 
-                            : (sel.focusNode.parentNode.parentNode.previousSibling != null) 
-                        ? sel.focusNode.parentNode.parentNode.previousSibling.childNodes[sel.focusNode.parentNode.parentNode.previousSibling.childNodes.length - 1] 
+                        textNode = (sel.focusNode.nodeName === "TD")
+                            ? (sel.focusNode.previousSibling != null)
+                                ? sel.focusNode.previousSibling
+                                : (sel.focusNode.parentNode.previousSibling != null)
+                                    ? sel.focusNode.parentNode.previousSibling.childNodes[sel.focusNode.parentNode.previousSibling.childNodes.length - 1]
+                                    : null
+                                : (sel.focusNode.parentNode.previousSibling != null)
+                            ? sel.focusNode.parentNode.previousSibling
+                            : (sel.focusNode.parentNode.parentNode.previousSibling != null)
+                        ? sel.focusNode.parentNode.parentNode.previousSibling.childNodes[sel.focusNode.parentNode.parentNode.previousSibling.childNodes.length - 1]
                         : null;
                     }
 
@@ -1585,7 +1585,7 @@
             if($editor.find('.richText-editor').is(":visible")) {
                 // show code
                 $editor.find('.richText-initial').show();
-                $editor.find('.richText-editor').hide(); 
+                $editor.find('.richText-editor').hide();
                 // disable non working buttons
                 $('.richText-toolbar').find('.richText-btn').each(function() {
                     if(!$(this).hasClass("fa-code")) {
@@ -1609,7 +1609,7 @@
          * @param {string} editorID
          * @param {object} selection
          * @param {boolean} reverse
-         **/ 
+         **/
         function convertCaretPosition(editorID, selection, reverse) {
             var $editor = $('#' + editorID);
             var $textarea = $editor.siblings(".richText-initial");
@@ -1666,7 +1666,7 @@
          * @param {Node} field
          * @param {int} start
          * @param {int} end
-         **/ 
+         **/
         function createSelection(field, start, end) {
             if( field.createTextRange ) {
                 var selRange = field.createTextRange();
@@ -1761,7 +1761,7 @@
 
             if (youtubeMatch && youtubeMatch[2].length === 11) {
                 return {
-                    "platform": "YouTube", 
+                    "platform": "YouTube",
                     "id": youtubeMatch[2]
                 };
             } else if(vimeoMatch && vimeoMatch[1]) {
@@ -1801,5 +1801,5 @@
 
         return $(this);
     };
- 
+
 }( jQuery ));

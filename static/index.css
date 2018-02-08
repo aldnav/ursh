@@ -164,3 +164,58 @@ body {
         background-color: white;
     }
 }
+
+
+.richText.richText.richText {
+    background-color: transparent;
+    border: 0;
+
+    color: inherit;
+}
+
+
+.richText-toolbar.richText-toolbar.richText-toolbar {
+    display: none;
+    color: inherit;
+}
+
+
+.richText-editor.richText-editor.richText-editor {
+    background-color: transparent;
+    padding: 0;
+    height: 100%;
+    color: inherit;
+    border: 0;
+}
+
+
+.richText-editor.richText-editor.richText-editor:focus {
+    border: 0;
+}
+
+.richText.richText.richText {
+    background-color: transparent;
+    border: 0;
+
+    color: inherit;
+}
+
+
+.richText-toolbar.richText-toolbar.richText-toolbar {
+    display: none;
+    color: inherit;
+}
+
+
+.richText-editor.richText-editor.richText-editor {
+    background-color: transparent;
+    padding: 0;
+    height: 100%;
+    color: inherit;
+    border: 0;
+}
+
+
+.richText-editor.richText-editor.richText-editor:focus {
+    border: 0;
+}

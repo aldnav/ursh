@@ -3,32 +3,25 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" type="text/css" href="/static/index.css" />
+        <link rel="stylesheet" type="text/css" href="/static/richtext.min.css" />
         <title>Hackathon</title>
     </head>
     <body>
         <div class="screens">
             <div class="p1-screen screen">
                 <label>Your Stack</label>
-                <div class="content">
-                    <div>Hello</div>
-                    <div class="b">Hi</div>
-                    <div class="i">Hi</div>
-                    <div class="u">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-                </div>
+                <div class="content"></div>
             </div>
 
             <div class="p2-screen screen">
                 <label>Your Opponent's Stack</label>
-                <div class="content">
-                    <div>Hello</div>
-                    <div class="b">Hi</div>
-                    <div class="i">Hi</div>
-                    <div class="u">Hi</div>
-                </div>
+                <div class="content"></div>
             </div>
         </div>
         <form action="">
-            <div class="input"></div>
+            <div class="input">
+                <textarea id="textarea"></textarea>
+            </div>
         </form>
 
     <template>
@@ -43,8 +36,60 @@
 
         <script type="text/javascript" src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js"></script>
+        <script type="text/javascript" src="/static/jquery.richtext.js"></script>
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
         <script type="text/javascript" charset="utf-8">
+            // Add list of words.
+            var WORDS = [];
+
+
+            $('#textarea').richText({
+                // text formatting
+                bold: true,
+                italic: true,
+                underline: true,
+
+                // text alignment
+                leftAlign: false,
+                centerAlign: false,
+                rightAlign: false,
+
+                // lists
+                ol: false,
+                ul: false,
+
+                // title
+                heading: false,
+
+                // fonts
+                fonts: false,
+                fontColor: false,
+
+                // uploads
+                imageUpload: false,
+                fileUpload: false,
+
+                // link
+                urls: false,
+
+                // tables
+                table: false,
+
+                // code
+                removeStyles: false,
+                code: false,
+
+                // colors
+                colors: [],
+
+                // dropdowns
+                fileHTML: '',
+                imageHTML: '',
+
+                // video
+                videoEmbed: false
+            });
+
             var socket = io.connect('http://' + document.domain + ':' + location.port);
             Cookies.remove('playerid');
             Cookies.remove('opponentid');
@@ -61,18 +106,43 @@
                     socket.emit('game:join', {playerid: playerid});
                     $('.player').data('identity', playerid);
                     $('.opponent').hide();
+                    // gameStart();
                 }
             });
 
-            $('form').on('submit', (e) => {
-                if (!playerid) {
-                    return;
+            $(document).on("input change blur keydown", ".richText-editor", function(e) {
+                if (e.keyCode === 13 || e.keyCode === "13") {
+                    e.preventDefault();
+                    if (!playerid) {
+                        return;
+                    }
+                    // let text = $(e.target).find('input').val();
+                    // let player = $(e.target).find('input').data('player');
+                    INPUT = $('.richText').find('.richText-editor').html();
+                    var inputHTML = $(INPUT);
+                    var parent = $('.p1-screen .content');
+                    var tag = inputHTML[0].tagName;
+                    var text = inputHTML[0].textContent;
+                    var detectClass = tag.toLowerCase();
+                    var foundElement = $('.p1-screen .content .' + detectClass).filter(function(i) {
+                        return $(this).text() === text;
+                    });
+                    if (foundElement[0]) {
+                        socket.emit('message:shoot', {
+                            message: {
+                                text: text,
+                                tag: tag,
+                                el: foundElement[0].outerHTML
+                            },
+                            player: playerid,
+                            opponent: Cookies.get('opponentid')
+                        });
+                        $(e.target).find('input').val('');
+                        $('.richText').find('textarea').val('');
+                        $('.richText').find('.richText-editor').html('');
+                        foundElement.remove();
+                    }
                 }
-                e.preventDefault();
-                let text = $(e.target).find('input').val();
-                let player = $(e.target).find('input').data('player');
-                socket.emit('message:shoot', {message: text, player: playerid, opponent: Cookies.get('opponentid')})
-                $(e.target).find('input').val('');
             });
 
             socket.on('game:register:success', (res) => {
@@ -81,6 +151,7 @@
                 console.log('Registered success!', playerid);
                 $('.player').data('identity', playerid);
                 $('.opponent').hide();
+                // gameStart();
             });
 
             socket.on('game:join:success', (res) => {
@@ -92,6 +163,7 @@
                 console.log(res, playerid);
                 if (res.target === playerid) {
                     console.log('player 1 received: ', res);
+                    $('.p1-screen .content').prepend(res.message.el);
                 }
             });
 
@@ -116,16 +188,95 @@
             socket.on('game:request_opponent:ready', (res) => {
                 if (res.opponent_id) {
                     console.log('match found vs', res.opponent_id);
-                    opponentid = res.opponentid;
+                    opponentid = res.opponent_id;
                     Cookies.set('opponentid', res.opponent_id);
                     clearTimeout(pooltimeout);
                     $('.opponent').data('identity', opponentid);
+                    gameStart();
                 }
             });
 
             // socket.on('game:request_opponent:fail', () => requestOpponent);
+            //
+            //
+            socket.on('game:opponent:sendstack', (res) => {
+                console.log($('.p2-screen .content'));
+                console.log(res, playerid);
+                if (res.target === playerid) {
+                    console.log(res.body);
+                    $('.p2-screen .content').empty().html(res.body);
+                }
+            });
 
+            function gameStart() {
+                $.get(
+                    "http://api.datamuse.com/words", {ml : 'coding'},
+                    function(data) {
+                        for(var i=0; i<data.length; i++){
+                            WORDS.push(data[i].word);
+                        }
+                        let mywords = getRandomSubarray(WORDS, 3);
+                        for (var i = 0; i < mywords.length; i++) {
+                            var el = $('<div>' + mywords[i] +'</div>');
+                            var classes = ['b', 'i', 'u'];
+                            el.addClass(classes[Math.floor(Math.random()*classes.length)]);
+                            $('.p1-screen .content').append(el);
+                        }
+                        // send opponents text
+                        console.log('sending stack from', playerid);
+                        console.log('to', opponentid);
+                        socket.emit('game:opponent:sendstack', {
+                            body: $('.p1-screen .content').html(),
+                            target: Cookies.get('opponentid')});
+                    }
+                );
+            }
+
+            function getRandomSubarray(arr, size) {
+                var shuffled = arr.slice(0), i = arr.length, temp, index;
+                while (i--) {
+                    index = Math.floor((i + 1) * Math.random());
+                    temp = shuffled[index];
+                    shuffled[index] = shuffled[i];
+                    shuffled[i] = temp;
+                }
+                return shuffled.slice(0, size);
+            }
 
         </script>
     </body>
 </html>
+<!-- =======
+<form action="" id="player1form">
+    <input type="text" id="player1message" name="player1message" data-player='player1'>
+</form>
+<form action="" id="player2form">
+    <input type="text" id="player2message" name="player2message" data-player='player2'>
+</form>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    socket.on('connect', function() {
+        socket.emit('my event', {data: 'I\'m connected!'});
+    });
+
+    $('form').on('submit', (e) => {
+        e.preventDefault();
+        let text = $(e.target).find('input').val();
+        let player = $(e.target).find('input').data('player');
+        socket.emit('message:shoot', {message: text, player: player})
+        $(e.target).find('input').val('');
+    });
+
+    // add logic to know which player is this
+    socket.on('message:pass:player1', (req) => {
+        console.log('player 1 received: ', req);
+    });
+
+    socket.on('message:pass:player2', (req) => {
+        console.log('player 2 received: ', req);
+    });
+
+</script> -->

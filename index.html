@@ -3,6 +3,8 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" type="text/css" href="index.css" />
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/richtext.min.css">
         <title>Hackathon</title>
     </head>
     <body>
@@ -27,19 +29,73 @@
                 </div>
             </div>
         </div>
-        <div class="input"></div>
-
-
-        <script>
-            window.addEventListener('keypress', (e) => {
-                const input = document.querySelector('.input');
-                if (input.innerHTML.length < 128) {
-                    input.innerHTML = input.innerHTML + e.key;
-                } else {
-                    input.innerHTML = input.innerHTML.substring(1) + e.key;
-                }
-                console.log(input.innerHTML.length, input.innerHTML.substring(1));
-            })
-        </script>
+        <div class="input">
+            <textarea id="textarea"></textarea>
+        </div>
     </body>
+
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/static/jquery.richtext.js"></script>
+    <script type="text/javascript">
+    $( document ).ready(function() {
+        // Add list of words.
+        var WORDS = [];
+        $.get(
+            "http://api.datamuse.com/words", {ml : 'coding'},
+            function(data) {
+                for(var i=0; i<data.length; i++){
+                    WORDS.push(data[i].word);
+                }
+            }
+        );
+
+        $('#textarea').richText({
+            // text formatting
+            bold: true,
+            italic: true,
+            underline: true,
+
+            // text alignment
+            leftAlign: false,
+            centerAlign: false,
+            rightAlign: false,
+
+            // lists
+            ol: false,
+            ul: false,
+
+            // title
+            heading: false,
+
+            // fonts
+            fonts: false,
+            fontColor: false,
+
+            // uploads
+            imageUpload: false,
+            fileUpload: false,
+
+            // link
+            urls: false,
+
+            // tables
+            table: false,
+
+            // code
+            removeStyles: false,
+            code: false,
+
+            // colors
+            colors: [],
+
+            // dropdowns
+            fileHTML: '',
+            imageHTML: '',
+
+            // video
+            videoEmbed: false
+        });
+    });
+    </script>
 </html>

@@ -2,8 +2,9 @@
 import json
 import time
 from uuid import uuid4
+from random import randint
 from flask import Flask, render_template
-from flask_socketio import SocketIO, send, emit
+from flask_socketio import SocketIO, send, emit, join_room, leave_room
 
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'secret!'
@@ -11,6 +12,7 @@ app.config['debug'] = True
 socketio = SocketIO(app)
 
 players = []
+rooms = []
 
 
 @socketio.on('game:register:request')
@@ -55,11 +57,17 @@ def get_opponent(player_id):
 def handle_relay(request):
     # player = request.get('player')
     opponent = request.get('opponent')
+    time.sleep(randint(10, 100))
     emit(
         'message:pass',
         {'message': request.get('message'),
          'target': opponent},
         broadcast=True)
+
+
+@socketio.on('game:opponent:sendstack')
+def relay_stack(request):
+    emit('game:opponent:sendstack:ack', request)
 
 
 @app.route('/')
