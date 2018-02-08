@@ -18,6 +18,11 @@ def handle_my_custom_event(json):
     emit('my response', json)
 
 
+@socketio.on('message:shoot')
+def handle_message(request):
+    print request
+
+
 @app.route('/')
 def root():
     return render_template('index.html')

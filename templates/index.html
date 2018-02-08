@@ -1,7 +1,24 @@
+<form action="" id="player1form">
+    <input type="text" id="player1message" name="player1message" data-player='player1'>
+</form>
+<form action="" id="player2form">
+    <input type="text" id="player2message" name="player2message" data-player='player2'>
+</form>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
 <script type="text/javascript" charset="utf-8">
     var socket = io.connect('http://' + document.domain + ':' + location.port);
     socket.on('connect', function() {
         socket.emit('my event', {data: 'I\'m connected!'});
     });
+
+    $('form').on('submit', (e) => {
+        e.preventDefault();
+        let text = $(e.target).find('input').val();
+        let player = $(e.target).find('input').data('player');
+        socket.emit('message:shoot', {message: text, player: player})
+        $(e.target).find('input').val('');
+    });
+
 </script>
